@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Xây Dựng Chiến Lược Kinh Doanh Số - Landing Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f1724; /* dark navy */
+      --accent:#ff7a18; /* orange */
+      --muted:#9aa4b2;
+      --card:#0b1220;
+      --glass: rgba(255,255,255,0.03);
+      --radius:16px;
+      --max-width:1100px;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Poppins,system-ui,Arial;margin:0;background:linear-gradient(180deg,#071029 0%,#081229 60%);color:#e6eef6;line-height:1.45}
+    .container{max-width:var(--max-width);margin:0 auto;padding:48px 20px}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:32px;align-items:center;padding:48px 32px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:20px}
+    .eyebrow{display:inline-block;padding:6px 12px;background:rgba(255,255,255,0.03);border-radius:999px;color:var(--muted);font-weight:600;font-size:13px}
+    h1{font-size:34px;margin:14px 0 8px;line-height:1.05}
+    p.lead{color:var(--muted);margin:0 0 18px}
+    ul.features{list-style:none;padding:0;margin:18px 0 24px;display:flex;gap:12px;flex-wrap:wrap}
+    ul.features li{background:var(--glass);padding:8px 12px;border-radius:999px;color:#dff0ff;font-weight:600;font-size:13px}
+
+    /* Card */
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:14px;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
+    form input, form button{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    .muted{color:var(--muted);font-size:13px}
+    .price{font-weight:700;font-size:18px;margin:6px 0}
+    .btn{background:linear-gradient(90deg,var(--accent),#ff4f4f);border:none;color:#071029;padding:12px 14px;border-radius:12px;font-weight:700;cursor:pointer}
+    .small{font-size:13px}
+
+    /* Sections */
+    section{padding:64px 0}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .feature{background:var(--card);padding:18px;border-radius:12px}
+
+    /* Testimonials */
+    .testi{display:flex;gap:16px;align-items:flex-start}
+    .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg,#132233,#0b2030);display:flex;align-items:center;justify-content:center;font-weight:700}
+
+    /* FAQ */
+    .faq-item{background:var(--glass);padding:14px;border-radius:10px;margin-bottom:10px}
+
+    /* footer CTA */
+    .hero-cta{display:flex;flex-direction:column;gap:12px}
+
+    /* responsive */
+    @media (max-width:980px){.hero{grid-template-columns:1fr;padding:28px}.grid{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr 1fr}.container{padding:28px 16px}}
+
+    /* small animations */
+    .reveal{opacity:0;transform:translateY(10px);transition:all .7s cubic-bezier(.2,.9,.3,1)}
+    .reveal.show{opacity:1;transform:none}
+
+    /* countdown */
+    .countdown{display:flex;gap:8px}
+    .countdown div{background:rgba(255,255,255,0.03);padding:10px 12px;border-radius:10px;text-align:center}
+    .countdown .num{font-weight:800;font-size:18px}
+
+    /* success */
+    .modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,0.6)}
+    .modal.show{display:grid}
+    .modal-card{background:#071229;padding:26px;border-radius:12px;max-width:420px;text-align:center}
+
+
+    /* Popup */
+    .popup-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:9999;
+    }
+    .popup {
+        background: #fff; border-radius: 20px; max-width: 420px; width: 90%; padding: 40px 30px; text-align:center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeInScale 0.4s ease;
+    }
+    @keyframes fadeInScale {from {opacity:0; transform:scale(0.8);} to {opacity:1; transform:scale(1);}}
+    .popup h2 {color:#1d3557; font-size:1.6rem; margin-bottom:10px;}
+    .popup p {font-size:0.95rem; color:#444; margin-bottom:20px;}
+    .popup input {
+        width: 100%; padding:12px 15px; margin-bottom:15px; border:1px solid #ddd; border-radius:10px; font-size:1rem;
+    }
+    .popup button {
+        background:#f77f00; color:#fff; border:none; padding:12px 20px; border-radius:25px; font-size:1rem; cursor:pointer; width:100%; font-weight:600;
+    }
+    .popup .close {
+        position:absolute; top:15px; right:20px; font-size:22px; color:#666; cursor:pointer;
+    }
+    
+  </style>
+</head>
+<body>
+   <!-- Popup tự động -->
+        <div class="popup" id="promo-popup">
+          <div class="popup-box">
+            <h3>🎁 Ưu đãi đặc biệt hôm nay!</h3>
+            <p class="muted">Đăng ký ngay để nhận giảm 700.000đ và 1 buổi học thử miễn phí.</p>
+            <form id="popup-form" style="margin-top:14px">
+              <input id="popup-name" placeholder="Họ & tên" required />
+              <div style="height:8px"></div>
+              <input id="popup-phone" placeholder="Số điện thoại" required />
+              <div style="height:8px"></div>
+              <button class="btn" type="submit">Giữ Ưu Đãi</button>
+            </form>
+            <div style="height:12px"></div>
+            <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent)" onclick="closePopup()">Đóng</button>
+          </div>
+        </div>
+
+        <!-- Modal thành công -->
+        <div class="modal" id="modal">
+          <div class="modal-card">
+            <h3>Đăng ký thành công 🎉</h3>
+            <p class="muted">Cảm ơn bạn — chúng tôi sẽ liên hệ qua số điện thoại để xác nhận.</p>
+            <div style="height:12px"></div>
+            <button class="btn" onclick="closeModal()">Đóng</button>
+          </div>
+        </div>
+
+        <script>
+          // Hiện popup sau 10s nếu chưa từng hiện
+          setTimeout(()=>{
+            if(!localStorage.getItem('popupShown')){
+              document.getElementById('promo-popup').classList.add('show');
+              localStorage.setItem('popupShown','1');
+            }
+          },10000);
+
+          function closePopup(){document.getElementById('promo-popup').classList.remove('show')}
+
+          // Xử lý form popup
+          const popupForm=document.getElementById('popup-form');
+          popupForm.addEventListener('submit',e=>{
+            e.preventDefault();
+            const name=document.getElementById('popup-name').value.trim();
+            const phone=document.getElementById('popup-phone').value.trim();
+            if(!name||!phone){alert('Vui lòng nhập đủ thông tin');return;}
+            const data=JSON.parse(localStorage.getItem('popupRegs')||'[]');
+            data.unshift({name,phone,ts:new Date().toISOString()});
+            localStorage.setItem('popupRegs',JSON.stringify(data));
+            document.getElementById('promo-popup').classList.remove('show');
+            document.getElementById('modal').classList.add('show');
+          });
+
+          function closeModal(){document.getElementById('modal').classList.remove('show')}
+        </script>
+
+
+
+  <div class="container">
+
+    <!-- HERO -->
+    <div class="hero reveal" id="hero">
+      <div>
+        <span class="eyebrow">Khóa học online</span>
+        <h1>Xây Dựng Chiến Lược Kinh Doanh Số — Cho chủ doanh nghiệp & shop muốn chuyển đổi online</h1>
+        <p class="lead">Chỉ cần <strong>1–2 giờ/ngày</strong>, áp dụng công thức hệ thống hoá kênh YouTube & phễu bán hàng để tự động hoá doanh thu (dành cho năm 2025).</p>
+
+        <ul class="features">
+          <li>Áp dụng thực chiến</li>
+          <li>Tự động hoá</li>
+          <li>Cho người không kỹ thuật</li>
+        </ul>
+
+        <div style="display:flex;gap:12px;align-items:center">
+          <button class="btn" onclick="document.getElementById('form-name').scrollIntoView({behavior:'smooth'})">Đăng ký ngay</button>
+          <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent)">Xem video</button>
+        </div>
+      </div>
+
+      <!-- Registration card -->
+      <aside class="card hero-cta">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="muted">Ưu đãi nhóm mở lớp</div>
+            <div class="price">Giá gốc: <s class="muted">3.990.000đ</s></div>
+            <div class="price">Giảm còn: <span style="color:var(--accent)">2.990.000đ</span></div>
+          </div>
+          <div class="muted small">4 buổi + Q&A</div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="muted small">Ưu đãi còn lại</div>
+          <div class="countdown" id="countdown"></div>
+        </div>
+
+        <form id="reg-form" style="margin-top:14px">
+          <input id="name" name="name" placeholder="Họ & tên" required />
+          <div style="height:8px"></div>
+          <input id="phone" name="phone" placeholder="Số điện thoại" required />
+          <div style="height:8px"></div>
+          <input id="email" name="email" placeholder="Email (tuỳ chọn)" />
+          <div style="height:8px"></div>
+          <button class="btn" type="submit">ĐĂNG KÝ VÀ GIỮ CHỖ</button>
+        </form>
+
+        <div class="muted small" style="margin-top:8px">Bảo mật thông tin. Tư vấn miễn phí sau khi đăng ký.</div>
+      </aside>
+    </div>
+
+    <!-- About / Video -->
+    <section>
+      <div class="grid">
+        <div class="reveal">
+          <h3>Khóa học dành cho ai?</h3>
+          <p class="muted">Dành cho chủ shop, chủ doanh nghiệp offline, nhân viên bán hàng muốn chuyển đổi sang kênh online, tận dụng YouTube để bán hàng bền vững.</p>
+
+          <div style="display:flex;gap:12px;margin-top:16px">
+            <div class="feature">
+              <strong>Hệ thống phễu</strong>
+              <div class="muted small">Từ thu hút -> chăm sóc -> chuyển đổi -> tái mua.</div>
+            </div>
+            <div class="feature">
+              <strong>Áp dụng ngay</strong>
+              <div class="muted small">Bài tập thực tế, template sẵn sàng để dùng.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal card" style="min-height:240px">
+          <!-- Video embed (replace v=ID) -->
+          <div style="position:relative;padding-top:56.25%">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0" title="Video giới thiệu" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:8px" allowfullscreen></iframe>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+            <div class="avatar">CH</div>
+            <div>
+              <div style="font-weight:700">Chu Minh Hạnh</div>
+              <div class="muted small">Giảng viên — Người đã giúp hơn 1.000+ chủ shop chuyển đổi</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Course Content -->
+    <section>
+      <h3 class="reveal">Nội dung chính khóa học</h3>
+      <div class="grid-3" style="margin-top:16px">
+        <div class="feature reveal">
+          <strong>Phần 1: Tư duy & chiến lược</strong>
+          <div class="muted small">Xác định khách hàng, mục tiêu & KPI.</div>
+        </div>
+        <div class="feature reveal">
+          <strong>Phần 2: Xây kênh YouTube</strong>
+          <div class="muted small">Kịch bản, SEO, thumbnail, upload có hệ thống.</div>
+        </div>
+        <div class="feature reveal">
+          <strong>Phần 3: Phễu bán hàng</strong>
+          <div class="muted small">Tạo lead magnet, kịch bản chăm sóc tự động.</div>
+        </div>
+        <div class="feature reveal">
+          <strong>Phần 4: Chạy & tối ưu</strong>
+          <div class="muted small">Phân tích dữ liệu, tối ưu tỉ lệ chuyển đổi.</div>
+        </div>
+        <div class="feature reveal">
+          <strong>Phần 5: Hệ thống hoá & nhân bản</strong>
+          <div class="muted small">Scale đội ngũ và SOP vận hành.</div>
+        </div>
+        <div class="feature reveal">
+          <strong>Bonus</strong>
+          <div class="muted small">Template, checklist & nhóm hỗ trợ.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section>
+      <h3 class="reveal">Học viên nói gì?</h3>
+      <div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">
+        <div class="card testi reveal" style="flex:1 1 320px">
+          <div class="avatar">NT</div>
+          <div>
+            <div style="font-weight:700">Nguyễn Thị Lan</div>
+            <div class="muted small">"Từ shop offline tới có đơn online đều đặn. Giá trị hơn mong đợi!"</div>
+          </div>
+        </div>
+
+        <div class="card testi reveal" style="flex:1 1 320px">
+          <div class="avatar">PV</div>
+          <div>
+            <div style="font-weight:700">Phạm Vinh</div>
+            <div class="muted small">"Giảng viên dễ hiểu, template dùng luôn. Hệ thống giúp mình tăng 30% doanh thu."</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section>
+      <h3 class="reveal">Câu hỏi thường gặp</h3>
+      <div style="margin-top:14px">
+        <div class="faq-item reveal">
+          <strong>❓ Tôi không biết gì về kỹ thuật, có học được không?</strong>
+          <div class="muted small">Khóa học thiết kế dễ hiểu, có hướng dẫn từng bước. Hỗ trợ sau khoá.</div>
+        </div>
+        <div class="faq-item reveal">
+          <strong>❓ Khóa học online hay offline?</strong>
+          <div class="muted small">Khóa học chính là online — video + tài liệu + buổi Q&A trực tiếp theo lịch.</div>
+        </div>
+        <div class="faq-item reveal">
+          <strong>❓ Sau khóa học có hỗ trợ không?</strong>
+          <div class="muted small">Có. Hỗ trợ trong nhóm riêng và kèm 1 buổi Q&A.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section style="text-align:center">
+      <div class="card reveal" style="display:inline-block;padding:28px 36px">
+        <h3>Đăng ký ngay — Giữ chỗ & nhận ưu đãi 700K</h3>
+        <p class="muted">Không có điều hoàn hảo, chỉ có khoảnh khắc bạn bắt đầu. Hãy để chúng tôi dẫn đường.</p>
+        <div style="margin-top:12px;display:flex;gap:12px;justify-content:center">
+          <button class="btn" onclick="document.getElementById('form-name').scrollIntoView({behavior:'smooth'})">Đăng ký ngay</button>
+          <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent)">Xem chương trình</button>
+        </div>
+      </div>
+    </section>
+
+    <footer style="padding:40px 0;text-align:center;color:var(--muted)">
+      © 2025 — Xây Dựng Chiến Lược Kinh Doanh Số • Bản quyền nội dung thuộc về đội ngũ giảng viên
+    </footer>
+
+  </div>
+
+  <!-- Success modal -->
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <h3>Đăng ký thành công 🎉</h3>
+      <p class="muted">Cảm ơn bạn — chúng tôi sẽ liên hệ qua số điện thoại để xác nhận. Vui lòng kiểm tra tin nhắn.</p>
+      <div style="height:12px"></div>
+      <button class="btn" onclick="closeModal()">Đóng</button>
+    </div>
+  </div>
+
+
+
+    <!-- Popup Form -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <span class="close" id="popupClose">×</span>
+            <h2>🎁 Nhận ưu đãi học phí đặc biệt!</h2>
+            <p>Đăng ký ngay hôm nay để giữ chỗ và nhận quà tặng khóa học trị giá 500.000đ</p>
+            <form id="popupForm">
+                <input type="text" placeholder="Họ và tên" required>
+                <input type="tel" placeholder="Số điện thoại" required>
+                <button type="submit">Giữ chỗ ngay</button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <script>
+        function scrollToForm() {
+            document.getElementById('form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popupClose = document.getElementById('popupClose');
+
+        // Hiển thị popup sau 10 giây nếu chưa từng hiển thị
+        setTimeout(() => {
+            if (!localStorage.getItem('popupShown')) {
+            popupOverlay.style.display = 'flex';
+            localStorage.setItem('popupShown', 'true');
+            }
+        }, 10000);
+
+        // Đóng popup khi bấm nút "Close"
+        popupClose.addEventListener('click', () => {
+            popupOverlay.style.display = 'none';
+        });
+
+        // Xử lý khi gửi form trong popup
+        document.getElementById('popupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            alert('Cảm ơn bạn đã đăng ký! Chúng tôi sẽ liên hệ sớm.');
+            popupOverlay.style.display = 'none';
+        });
+    </script>
+
+  <script>
+    // Reveal on scroll
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('show')})
+    },{threshold:0.12});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+    // Countdown target: now + 10 days
+    const target = new Date(Date.now() + 10*24*60*60*1000);
+    function updateCountdown(){
+      const diff = target - new Date();
+      const wrap = document.getElementById('countdown');
+      if(diff<=0){wrap.innerHTML='<div class="muted">Ưu đãi đã kết thúc</div>';clearInterval(timer);return}
+      const days = Math.floor(diff/86400000);
+      const hrs = Math.floor((diff%86400000)/3600000);
+      const mins = Math.floor((diff%3600000)/60000);
+      const secs = Math.floor((diff%60000)/1000);
+      wrap.innerHTML=`<div><div class="num">${days}</div><div class="muted small">ngày</div></div>`+
+                     `<div><div class="num">${hrs}</div><div class="muted small">giờ</div></div>`+
+                     `<div><div class="num">${mins}</div><div class="muted small">phút</div></div>`+
+                     `<div><div class="num">${secs}</div><div class="muted small">giây</div></div>`;
+    }
+    updateCountdown();
+    const timer = setInterval(updateCountdown,1000);
+
+    // Simple form handling (simulate submit)
+    const form = document.getElementById('reg-form');
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
+      if(!name||!phone){alert('Vui lòng nhập tên và số điện thoại');return}
+
+      // rudimentary phone validation
+      const phoneClean = phone.replace(/[^0-9+]/g,'');
+      if(phoneClean.length < 9){alert('Số điện thoại không hợp lệ');return}
+
+      // store in localStorage as demo
+      const db = JSON.parse(localStorage.getItem('registrations')||'[]');
+      db.unshift({name,phone,email,ts:new Date().toISOString()});
+      localStorage.setItem('registrations', JSON.stringify(db));
+
+      // show modal
+      document.getElementById('modal').classList.add('show');
+      // reset form fields
+      form.reset();
+    });
+
+    function closeModal(){document.getElementById('modal').classList.remove('show')}
+
+    // anchor for register button
+    const formNameAnchor = document.createElement('div');formNameAnchor.id='form-name';document.body.appendChild(formNameAnchor);
+
+    // (Optional) helper: developer can replace VIDEO_ID with actual YouTube ID in iframe src
+  </script>
+</body>
+</html>

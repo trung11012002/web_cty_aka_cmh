@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Xây Dựng Chiến Lược Kinh Doanh Số - Landing Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f1724;--accent:#ff7a18;--muted:#9aa4b2;--card:#0b1220;--glass:rgba(255,255,255,0.03);--radius:16px;--max-width:1100px;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Poppins,system-ui,Arial;margin:0;background:linear-gradient(180deg,#071029 0%,#081229 60%);color:#e6eef6;line-height:1.45}
+    .container{max-width:var(--max-width);margin:0 auto;padding:48px 20px}
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:32px;align-items:center;padding:48px 32px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:20px}
+    .eyebrow{display:inline-block;padding:6px 12px;background:rgba(255,255,255,0.03);border-radius:999px;color:var(--muted);font-weight:600;font-size:13px}
+    h1{font-size:34px;margin:14px 0 8px;line-height:1.05}
+    p.lead{color:var(--muted);margin:0 0 18px}
+    ul.features{list-style:none;padding:0;margin:18px 0 24px;display:flex;gap:12px;flex-wrap:wrap}
+    ul.features li{background:var(--glass);padding:8px 12px;border-radius:999px;color:#dff0ff;font-weight:600;font-size:13px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:14px;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
+    form input, form button{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    .muted{color:var(--muted);font-size:13px}
+    .price{font-weight:700;font-size:18px;margin:6px 0}
+    .btn{background:linear-gradient(90deg,var(--accent),#ff4f4f);border:none;color:#071029;padding:12px 14px;border-radius:12px;font-weight:700;cursor:pointer}
+    .small{font-size:13px}
+    section{padding:64px 0}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .feature{background:var(--card);padding:18px;border-radius:12px}
+    .testi{display:flex;gap:16px;align-items:flex-start}
+    .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg,#132233,#0b2030);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .faq-item{background:var(--glass);padding:14px;border-radius:10px;margin-bottom:10px}
+    .hero-cta{display:flex;flex-direction:column;gap:12px}
+    @media (max-width:980px){.hero{grid-template-columns:1fr;padding:28px}.grid{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr 1fr}.container{padding:28px 16px}}
+    .reveal{opacity:0;transform:translateY(10px);transition:all .7s cubic-bezier(.2,.9,.3,1)}
+    .reveal.show{opacity:1;transform:none}
+    .countdown{display:flex;gap:8px}
+    .countdown div{background:rgba(255,255,255,0.03);padding:10px 12px;border-radius:10px;text-align:center}
+    .countdown .num{font-weight:800;font-size:18px}
+    .modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,0.6);z-index:999}
+    .modal.show{display:grid}
+    .modal-card{background:#071229;padding:26px;border-radius:12px;max-width:420px;text-align:center}
+    /* Popup */
+    .popup{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,0.75);z-index:998;}
+    .popup.show{display:grid;animation:fadeIn .5s ease forwards;}
+    .popup-box{background:#10182a;padding:28px;border-radius:16px;max-width:420px;width:90%;text-align:center;box-shadow:0 6px 24px rgba(0,0,0,0.5)}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Nội dung chính giữ nguyên như trước -->
+    <h1 style="text-align:center">Trang Landing Page Demo</h1>
+  </div>
+
+  <!-- Popup tự động -->
+  <div class="popup" id="promo-popup">
+    <div class="popup-box">
+      <h3>🎁 Ưu đãi đặc biệt hôm nay!</h3>
+      <p class="muted">Đăng ký ngay để nhận giảm 700.000đ và 1 buổi học thử miễn phí.</p>
+      <form id="popup-form" style="margin-top:14px">
+        <input id="popup-name" placeholder="Họ & tên" required />
+        <div style="height:8px"></div>
+        <input id="popup-phone" placeholder="Số điện thoại" required />
+        <div style="height:8px"></div>
+        <button class="btn" type="submit">Giữ Ưu Đãi</button>
+      </form>
+      <div style="height:12px"></div>
+      <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent)" onclick="closePopup()">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Modal thành công -->
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <h3>Đăng ký thành công 🎉</h3>
+      <p class="muted">Cảm ơn bạn — chúng tôi sẽ liên hệ qua số điện thoại để xác nhận.</p>
+      <div style="height:12px"></div>
+      <button class="btn" onclick="closeModal()">Đóng</button>
+    </div>
+  </div>
+
+  <script>
+    // Hiện popup sau 10s nếu chưa từng hiện
+    setTimeout(()=>{
+      if(!localStorage.getItem('popupShown')){
+        document.getElementById('promo-popup').classList.add('show');
+        localStorage.setItem('popupShown','1');
+      }
+    },10000);
+
+    function closePopup(){document.getElementById('promo-popup').classList.remove('show')}
+
+    // Xử lý form popup
+    const popupForm=document.getElementById('popup-form');
+    popupForm.addEventListener('submit',e=>{
+      e.preventDefault();
+      const name=document.getElementById('popup-name').value.trim();
+      const phone=document.getElementById('popup-phone').value.trim();
+      if(!name||!phone){alert('Vui lòng nhập đủ thông tin');return;}
+      const data=JSON.parse(localStorage.getItem('popupRegs')||'[]');
+      data.unshift({name,phone,ts:new Date().toISOString()});
+      localStorage.setItem('popupRegs',JSON.stringify(data));
+      document.getElementById('promo-popup').classList.remove('show');
+      document.getElementById('modal').classList.add('show');
+    });
+
+    function closeModal(){document.getElementById('modal').classList.remove('show')}
+  </script>
+</body>
+</html>
