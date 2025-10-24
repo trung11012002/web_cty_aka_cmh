@@ -1195,6 +1195,32 @@ html, body {
   backface-visibility: hidden;
 }
 
+/* Loading overlay */
+#loading-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: none;                /* ẩn mặc định */
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #ccc;
+  border-top: 6px solid #2ecc71;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite !important; /* ✅ thêm !important */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
   </style>
   <link as="style" href="https://fonts.googleapis.com/css?family=Lato:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7COpen%20Sans:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7CMontserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7CRoboto:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7COld%20Standard%20TT:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7CDM%20Serif%20Display:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7CBarlow:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7CCourier%20Prime:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7CPoppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7C'Open%20Sans':100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7CInter:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7CBarlow%20Condensed:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&amp;display=swap" rel="preload"/>
   <link as="script" crossorigin="" href="https://stcdn.leadconnectorhq.com/_preview/DXlWzDSL.js"/>
@@ -11572,6 +11598,10 @@ Và nếu bạn đang tìm hướng đi bài bản để kinh doanh hiệu quả
     <button class="btn close-btn" onclick="closePopup()">Đóng</button>
   </div>
 </div>
+<!-- Loader overlay -->
+<div id="loading-overlay">
+  <div class="spinner"></div>
+</div>
 
 <!-- Modal thành công -->
 <div class="modal" id="modal">
@@ -11633,30 +11663,46 @@ Và nếu bạn đang tìm hướng đi bài bản để kinh doanh hiệu quả
     const phoneOrder = phoneField.value.trim();
     const addressOrder = nameField.value.trim();
 
-    try {
-      const res = await fetch(API_URL, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        method: 'POST',
-        body: new URLSearchParams({
-          action: 'add',
-          qtyOrder,
-          phoneOrder,
-          addressOrder
-        })
-      });
+    const res = await fetch(API_URL, {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      method: 'POST',
+      body: new URLSearchParams({
+        action: 'add',
+        qtyOrder,
+        phoneOrder,
+        addressOrder
+      })
+    });
 
-      const msg = await res.text();
-      console.log("Server response:", msg);
-      window.location.href = 'thank.html'; // chuyển hướng cảm ơn
-    } catch (err) {
-      console.error("Fetch error:", err);
-      alert('Có lỗi xảy ra khi gửi dữ liệu!');
-    }
+    const msg = await res.text();
+    console.log("Server response:", msg);
+
+    // Chuyển hướng cảm ơn sau khi gửi xong
+    window.location.href = 'thank.html';
   }
 
+
   // ✅ Hàm xử lý submit form popup
+  // async function handleSubmit(e) {
+  //   if (e) e.preventDefault();
+
+  //   await new Promise(r => setTimeout(r, 50)); // đợi autofill nếu có
+
+  //   const phoneOk = validPhone(phoneField.value);
+  //   const nameOk = (nameField.value || '').trim().length > 2;
+
+  //   setInvalid('popup-phone', !phoneOk);
+  //   setInvalid('popup-name', !nameOk);
+
+  //   if (!phoneOk || !nameOk) {
+  //     alert('Vui lòng nhập đúng Họ tên và Số điện thoại!');
+  //     return;
+  //   }
+
+  //   // ✅ Gửi dữ liệu
+  //   addRow();
+  // }
+
   async function handleSubmit(e) {
     if (e) e.preventDefault();
 
@@ -11673,9 +11719,22 @@ Và nếu bạn đang tìm hướng đi bài bản để kinh doanh hiệu quả
       return;
     }
 
-    // ✅ Gửi dữ liệu
-    addRow();
+    // Hiện loading
+    document.getElementById('loading-overlay').style.display = 'flex';
+
+    try {
+      // ✅ Gửi dữ liệu (đợi cho đến khi xong)
+      await addRow();
+
+    } catch (err) {
+      console.error("Fetch error:", err);
+      alert('Có lỗi xảy ra khi gửi dữ liệu!');
+    } finally {
+      // ✅ Ẩn loading khi đã gửi xong (bất kể nhanh hay chậm)
+      document.getElementById('loading-overlay').style.display = 'none';
+    }
   }
+
 </script>
 
 
